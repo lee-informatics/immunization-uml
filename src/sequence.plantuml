@@ -1,0 +1,37 @@
+@startuml
+
+!include style/sequence.plantuml
+autonumber
+' Example by Preston Lee
+
+title Example Sequence Diagram\nRendered %date('yyyy.MM.dd')
+
+
+box Engineering
+    actor Developer
+    actor Manager
+end box
+
+box Cloud Systems
+    queue "Email Queue" as EmailQ
+    actor "Steering Committee" as SteeringCommittee
+    boundary "Website"
+end box
+
+loop agile iterations
+    activate Developer
+    Developer -> Manager : complete deliverables
+    activate Manager
+    Manager -> EmailQ : notify stakeholders
+    EmailQ -> SteeringCommittee : check out our work!
+    Manager -> Website : post updates
+    == Sprint End ==
+    Manager -> Developer : says thanks!
+end loop
+
+
+
+== Project Ends ==
+
+
+@enduml

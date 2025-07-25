@@ -6,13 +6,13 @@ WORKDIR /build
 
 # Install PlantUML dependencies
 RUN apt-get -y update
-RUN apt-get install -y openjdk-18-jre-headless wget graphviz
+RUN apt-get install -y openjdk-21-jre-headless wget graphviz
 
 # Get a PlantUML distribution directly
 RUN wget https://github.com/plantuml/plantuml/releases/download/v1.2025.4/plantuml-1.2025.4.jar -O plantuml.jar
 
 COPY . .
-RUN ./build.sh
+RUN bash ./build.sh
 RUN rm *.jar
 
 FROM nginx:stable-alpine AS server
