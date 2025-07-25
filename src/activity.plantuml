@@ -1,32 +1,132 @@
-@startuml
+@startuml HL7_FHIR_Foundry_Architecture
+!theme blueprint
+skinparam backgroundColor #FEFEFE
+skinparam shadowing false
+skinparam RoundCorner 10
+skinparam ArrowThickness 2
 
-!include style/activity.plantuml
-' Example by Preston Lee
+title HL7 FHIR Foundry Architecture
 
-title Example Activity Diagram\nRendered %date('yyyy.MM.dd')
+' Global colors
+skinparam actorBackgroundColor #2C5282
+skinparam actorFontColor #FFFFFF
+skinparam componentBackgroundColor #63B3ED
+skinparam componentFontColor #000000
+skinparam databaseBackgroundColor #3182CE
+skinparam databaseFontColor #FFFFFF
+skinparam cloudBackgroundColor #48BB78
+skinparam cloudFontColor #FFFFFF
+skinparam nodeBackgroundColor #3182CE
+skinparam nodeFontColor #FFFFFF
+skinparam queueBackgroundColor #ED8936
+skinparam queueFontColor #FFFFFF
 
+' ===== Development Layer =====
+together {
+package "Development Community" #F7FAFC {
+  actor "Developer 1" as dev1
+  actor "Developer 2" as dev2
+  actor "Developer 3" as dev3
+  component "Reference\nImplementations" as refs
+  note right of refs
+    Docker Images:
+    - FHIR Server
+    - SQL Database
+    - Dashboard App
+    - Stack Controller
+  end note
+}
+}
 
-(*) --> ["New Diagram assigned"] "Create Diagram File"
-note right: Create one from scratch, or use a template.
---> [Figure out corretn content] "Edit File"
-note right: This is just another note
---> === BStart ===
+' ===== Submission & Curation Layer =====
+together {
+package "HL7 FHIR Foundry Platform" #E6FFFA {
+  queue "Submission\nQueue" as queue
+  actor "Curator" as curator
+  component "Individual Products" as products
+  component "Product Bundles" as bundles
+  database "Products\nRegistry" as registry
+  component "**Foundry Gallery**\n(Public Catalog)" as gallery
 
-=== BStart === --> "Get Work Done"
-if "You're done?" then
-    --> [yes] "Go To Sleep"
-    --> === BEnd ===
+  note right of products
+    - FHIR Server
+    - SQL Database
+    - Dashboard App
+    - CDS Services
+    - etc.
+  end note
 
-else
-    -> [no] "Take a Break"
-    --> === BEnd ===
-endif
+  note right of bundles
+    - FHIR + Database
+    - Complete Immunization Stack
+    - etc.
+  end note
 
-=== BStart === --> "Turn off Distractions"
---> === BEnd ===
+  note right of gallery
+    **Gallery Features:**
+    - Browse all products
+    - Search by category
+    - View documentation
+    - Download compose files
+    - Access "Try It Now" links
+  end note
+}
+}
 
---> "Commit and Push File"
---> [Automated CI/CD] "Check out Deployment!" 
---> (*)
+' ===== Deployment Layer =====
+together {
+package "Deployment Options" #FFF5F5 {
+  cloud "**HL7 Hosted**\n(Try It Now)" as hosted
+  note bottom of hosted : Paid hosting option
+  node "**Self-Hosted**\n(Docker Deployment)" as selfhost
+  note bottom of selfhost : docker compose up
+}
+}
+
+' ===== End Users Layer =====
+together {
+package "End Users" #F7FAFC {
+  actor "Healthcare Org" as org1
+  actor "Public Health Dept" as org2
+  actor "Research Institution" as org3
+}
+}
+
+' ===== Flow Arrows =====
+dev1 -down-> refs : Creates
+dev2 -down-> refs
+dev3 -down-> refs
+refs -down-> queue : Submit for\nReview
+queue -down-> curator : Reviews &\nApproves
+curator -down-> products : Publishes\nProducts
+curator -down-> bundles : Creates\nBundles
+products -down-> registry : Added to
+bundles -down-> registry : Added to
+registry -down-> gallery : Listed in
+gallery -down-> hosted : Deploy for\nPublic Access
+gallery -down-> selfhost : Download &\nDeploy
+hosted -down-> org1 : Try It Now
+hosted -down-> org2 : Try It Now
+selfhost -down-> org2 : Production Use
+selfhost -down-> org3 : Custom Deploy
+
+' ===== Curator Responsibilities =====
+note right of curator
+  **Curator Responsibilities:**
+  - Quality review
+  - Security verification
+  - Standards compliance
+  - Bundle creation
+end note
+
+' ===== Legend =====
+legend right
+  |= Color |= Component |
+  |<#2C5282> | Actors/Core Components |
+  |<#48BB78> | Hosted Services |
+  |<#3182CE> | Self-Hosted Options |
+  |<#ED8936> | Process Queue |
+  |<#63B3ED> | Development Assets |
+endlegend
 
 @enduml
