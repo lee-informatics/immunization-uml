@@ -1,0 +1,10 @@
+# macOS files
+.DS_Store
+
+# PlantUML and other Java binaries
+**/*.jar
+
+# Generated files
+src/**/*.svg
+src/**/*.png
+

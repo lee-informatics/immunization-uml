@@ -1,0 +1,8 @@
+.git
+.gitignore
+
+**/*.png
+**/*.svg
+**/*.jar
+Dockerfile
+README.md

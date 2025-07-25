@@ -1,0 +1,10 @@
+skinparam {
+    TitleFontName Helvetica
+    ActivityFontName Helvetica
+    ArrowFontName Helvetica
+    BoundaryFontName Helvetica
+    NoteBackgroundColor #eea
+    NoteBorderColor #dd9
+    NoteFontName Courier
+    NoteFontSize 10
+}
