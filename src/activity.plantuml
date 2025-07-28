@@ -21,6 +21,12 @@ skinparam nodeFontColor #FFFFFF
 skinparam queueBackgroundColor #ED8936
 skinparam queueFontColor #FFFFFF
 
+' Future-state node styling
+skinparam cloudBorderColor<<future>> #AAAAAA
+skinparam nodeBorderColor<<future>> #AAAAAA
+skinparam cloudFontColor<<future>> #555555
+skinparam nodeFontColor<<future>> #555555
+
 ' ===== Development Layer =====
 together {
 package "Development Community" #F7FAFC {
@@ -78,12 +84,31 @@ together {
 package "Deployment Options" #FFF5F5 {
   cloud "**HL7 Hosted**\n(Try It Now)" as hosted
   note bottom of hosted : Paid hosting option
+
   node "**Self-Hosted**\n(Docker Deployment)" as selfhost
   note bottom of selfhost : docker compose up
+
+  cloud "**On-Demand Hosted Sandboxes**\n(Future)" as sandbox <<future>>
+  note right of sandbox
+    - Fully managed HL7-hosted environments
+    - Configurable through Foundry UI
+    - No PHI (synthetic/deidentified data only)
+    - For development, testing, training
+    - Always up-to-date via CI/CD
+  end note
+
+  node "**Private User-Provided Environments**\n(Future)" as privateenv <<future>>
+  note right of privateenv
+    - Deployed into user-managed infrastructure
+    - Can integrate with local production systems
+    - Full control over data (PHI allowed)
+    - Operated within corporate or private clouds
+    - Supports custom integrations
+  end note
 }
 }
 
-' ===== End Users Layer =====
+' ===== End Users Layer (Moved to Bottom) =====
 together {
 package "End Users" #F7FAFC {
   actor "Healthcare Org" as org1
@@ -103,12 +128,24 @@ curator -down-> bundles : Creates\nBundles
 products -down-> registry : Added to
 bundles -down-> registry : Added to
 registry -down-> gallery : Listed in
-gallery -down-> hosted : Deploy for\nPublic Access
-gallery -down-> selfhost : Download &\nDeploy
-hosted -down-> org1 : Try It Now
-hosted -down-> org2 : Try It Now
-selfhost -down-> org2 : Production Use
-selfhost -down-> org3 : Custom Deploy
+
+' Color-coded arrows for deployments
+gallery -[#48BB78]-> hosted : Deploy for\nPublic Access
+gallery -[#3182CE]-> selfhost : Download &\nDeploy
+gallery -[#AAAAAA]-> sandbox : Provision\nSandbox Env (Future)
+gallery -[#AAAAAA]-> privateenv : Deploy to\nPrivate Env (Future)
+
+' Color-coded arrows from deployments to users
+hosted -[#48BB78]-> org1 : Try It Now
+hosted -[#48BB78]-> org2 : Try It Now
+selfhost -[#3182CE]-> org2 : Production Use
+selfhost -[#3182CE]-> org3 : Custom Deploy
+sandbox -[#AAAAAA]-> org2 : Development & Training
+privateenv -[#AAAAAA]-> org1 : Integrated Local Use
+privateenv -[#AAAAAA]-> org3 : Research Deployments
+
+' ===== Feedback Loop =====
+curator -left-> refs : Feedback / Fixes\nfor Foundry compliance
 
 ' ===== Curator Responsibilities =====
 note right of curator
@@ -123,8 +160,9 @@ end note
 legend right
   |= Color |= Component |
   |<#2C5282> | Actors/Core Components |
-  |<#48BB78> | Hosted Services |
+  |<#48BB78> | HL7-Hosted Deployments |
   |<#3182CE> | Self-Hosted Options |
+  |<#AAAAAA> | Future-State Options |
   |<#ED8936> | Process Queue |
   |<#63B3ED> | Development Assets |
 endlegend
