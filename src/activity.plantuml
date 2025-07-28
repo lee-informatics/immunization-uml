@@ -5,6 +5,9 @@ skinparam shadowing false
 skinparam RoundCorner 10
 skinparam ArrowThickness 2
 
+' Use left to right direction for better control
+!define DIRECTION top to bottom direction
+
 title HL7 FHIR Foundry Architecture
 
 ' Global colors
@@ -28,8 +31,7 @@ skinparam cloudFontColor<<future>> #555555
 skinparam nodeFontColor<<future>> #555555
 
 ' ===== Development Layer =====
-together {
-package "Development Community" #F7FAFC {
+package "Development Community" as dev_pkg #F7FAFC {
   actor "Developer 1" as dev1
   actor "Developer 2" as dev2
   actor "Developer 3" as dev3
@@ -42,11 +44,9 @@ package "Development Community" #F7FAFC {
     - Stack Controller
   end note
 }
-}
 
 ' ===== Submission & Curation Layer =====
-together {
-package "HL7 FHIR Foundry Platform" #E6FFFA {
+package "HL7 FHIR Foundry Platform" as platform_pkg #E6FFFA {
   queue "Submission\nQueue" as queue
   actor "Curator" as curator
   component "Individual Products" as products
@@ -77,11 +77,9 @@ package "HL7 FHIR Foundry Platform" #E6FFFA {
     - Access "Try It Now" links
   end note
 }
-}
 
 ' ===== Deployment Layer =====
-together {
-package "Deployment Options" #FFF5F5 {
+package "Deployment Options" as deploy_pkg #FFF5F5 {
   cloud "**HL7 Hosted**\n(Try It Now)" as hosted
   note bottom of hosted : Paid hosting option
 
@@ -106,28 +104,30 @@ package "Deployment Options" #FFF5F5 {
     - Supports custom integrations
   end note
 }
-}
 
-' ===== End Users Layer (Moved to Bottom) =====
-together {
-package "End Users" #F7FAFC {
+' ===== End Users Layer (Below Deployment) =====
+package "End Users" as users_pkg #F7FAFC {
   actor "Healthcare Org" as org1
   actor "Public Health Dept" as org2
   actor "Research Institution" as org3
 }
-}
+
+' Force package ordering
+dev_pkg -[hidden]down-> platform_pkg
+platform_pkg -[hidden]down-> deploy_pkg
+deploy_pkg -[hidden]down-> users_pkg
 
 ' ===== Flow Arrows =====
-dev1 -down-> refs : Creates
-dev2 -down-> refs
-dev3 -down-> refs
-refs -down-> queue : Submit for\nReview
-queue -down-> curator : Reviews &\nApproves
-curator -down-> products : Publishes\nProducts
-curator -down-> bundles : Creates\nBundles
-products -down-> registry : Added to
-bundles -down-> registry : Added to
-registry -down-> gallery : Listed in
+dev1 --> refs : Creates
+dev2 --> refs
+dev3 --> refs
+refs --> queue : Submit for\nReview
+queue --> curator : Reviews &\nApproves
+curator --> products : Publishes\nProducts
+curator --> bundles : Creates\nBundles
+products --> registry : Added to
+bundles --> registry : Added to
+registry --> gallery : Listed in
 
 ' Color-coded arrows for deployments
 gallery -[#48BB78]-> hosted : Deploy for\nPublic Access
@@ -136,13 +136,13 @@ gallery -[#AAAAAA]-> sandbox : Provision\nSandbox Env (Future)
 gallery -[#AAAAAA]-> privateenv : Deploy to\nPrivate Env (Future)
 
 ' Color-coded arrows from deployments to users
-hosted -[#48BB78]-> org1 : Try It Now
-hosted -[#48BB78]-> org2 : Try It Now
-selfhost -[#3182CE]-> org2 : Production Use
-selfhost -[#3182CE]-> org3 : Custom Deploy
-sandbox -[#AAAAAA]-> org2 : Development & Training
-privateenv -[#AAAAAA]-> org1 : Integrated Local Use
-privateenv -[#AAAAAA]-> org3 : Research Deployments
+hosted -[#48BB78]--> org1 : Try It Now
+hosted -[#48BB78]--> org2 : Try It Now
+selfhost -[#3182CE]--> org2 : Production Use
+selfhost -[#3182CE]--> org3 : Custom Deploy
+sandbox -[#AAAAAA]--> org2 : Development & Training
+privateenv -[#AAAAAA]--> org1 : Integrated Local Use
+privateenv -[#AAAAAA]--> org3 : Research Deployments
 
 ' ===== Feedback Loop =====
 curator -left-> refs : Feedback / Fixes\nfor Foundry compliance
