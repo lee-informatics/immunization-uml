@@ -106,7 +106,7 @@ package "Deployment Options" as deploy_pkg #FFF5F5 {
 }
 
 ' ===== End Users Layer (Below Deployment) =====
-package "End Users" as users_pkg #c3c3c3ff {
+package "End Users" as users_pkg #8A9BA8 {
   actor "Healthcare Org" as org1
   actor "Developers" as org2
 }
