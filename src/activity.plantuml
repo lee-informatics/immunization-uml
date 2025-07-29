@@ -4,6 +4,10 @@ skinparam backgroundColor #FEFEFE
 skinparam shadowing false
 skinparam RoundCorner 10
 skinparam ArrowThickness 2
+skinparam ArrowColor #2C5282
+skinparam ArrowFontColor #2C5282
+skinparam ArrowFontSize 12
+skinparam titleFontColor #000000
 
 ' Use left to right direction for better control
 !define DIRECTION top to bottom direction
@@ -11,8 +15,10 @@ skinparam ArrowThickness 2
 title HL7 FHIR Foundry Architecture
 
 ' Global colors
+skinparam packageTitleFontColor #000000
 skinparam actorBackgroundColor #2C5282
-skinparam actorFontColor #FFFFFF
+skinparam actorFontColor #000000
+skinparam actorBorderColor #000000
 skinparam componentBackgroundColor #63B3ED
 skinparam componentFontColor #000000
 skinparam databaseBackgroundColor #3182CE
@@ -31,7 +37,7 @@ skinparam cloudFontColor<<future>> #555555
 skinparam nodeFontColor<<future>> #555555
 
 ' ===== Development Layer =====
-package "Development Community" as dev_pkg #F7FAFC {
+package "<color:#2C5282>Development Community</color>" as dev_pkg #F7FAFC {
   actor "Developer 1" as dev1
   actor "Developer 2" as dev2
   actor "Developer 3" as dev3
@@ -46,7 +52,7 @@ package "Development Community" as dev_pkg #F7FAFC {
 }
 
 ' ===== Submission & Curation Layer =====
-package "HL7 FHIR Foundry Platform" as platform_pkg #E6FFFA {
+package "<color:#2C5282>HL7 FHIR Foundry Platform</color>" as platform_pkg #E6FFFA {
   queue "Submission\nQueue" as queue
   actor "Curator" as curator
   component "Individual Products" as products
@@ -79,7 +85,7 @@ package "HL7 FHIR Foundry Platform" as platform_pkg #E6FFFA {
 }
 
 ' ===== Deployment Layer =====
-package "Deployment Options" as deploy_pkg #FFF5F5 {
+package "<color:#2C5282>Deployment Options</color>" as deploy_pkg #FFF5F5 {
   cloud "**HL7 Hosted**\n(Try It Now)" as hosted
   note bottom of hosted : Paid hosting option
 
@@ -106,7 +112,7 @@ package "Deployment Options" as deploy_pkg #FFF5F5 {
 }
 
 ' ===== End Users Layer (Below Deployment) =====
-package "End Users" as users_pkg #8A9BA8 {
+package "<color:#2C5282>End Users</color>" as users_pkg #8A9BA8 {
   actor "Healthcare Org" as org1
   actor "Developers" as org2
 }
@@ -153,16 +159,5 @@ note right of curator
   - Standards compliance
   - Bundle creation
 end note
-
-' ===== Legend =====
-legend right
-  |= Color |= Component |
-  |<#2C5282> | Actors/Core Components |
-  |<#48BB78> | HL7-Hosted Deployments |
-  |<#3182CE> | Self-Hosted Options |
-  |<#AAAAAA> | Future-State Options |
-  |<#ED8936> | Process Queue |
-  |<#63B3ED> | Development Assets |
-endlegend
 
 @enduml
